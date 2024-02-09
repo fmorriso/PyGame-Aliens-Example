@@ -18,3 +18,4 @@ class Settings:
         # print(f'scale factor = {self.scaleFactor}')
         self.screen_width = game_width
         self.screen_height = game_height
+        self.near_bottom = game_height * 0.90

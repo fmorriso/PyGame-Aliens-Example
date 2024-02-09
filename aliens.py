@@ -195,6 +195,7 @@ class Shot(pg.sprite.Sprite):
 
 class Bomb(pg.sprite.Sprite):
     """A bomb the aliens drop."""
+    global settings
 
     speed = 9
     images: List[pg.Surface] = []
@@ -215,9 +216,7 @@ class Bomb(pg.sprite.Sprite):
         - remove the Bomb.
         """
         self.rect.move_ip(0, self.speed)
-        # TODO: change this hard-coded value of 470
-        near_bottom = settings.screen_height * 0.95
-        if self.rect.bottom >= near_bottom:
+        if self.rect.bottom >= settings.near_bottom:
             Explosion(self, self.explosion_group)
             self.kill()
 
