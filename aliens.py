@@ -231,7 +231,8 @@ class Score(pg.sprite.Sprite):
         self.color = "white"
         self.lastscore = -1
         self.update()
-        self.rect = self.image.get_rect().move(10, 450)
+        # self.rect = self.image.get_rect().move(10, 450)
+        self.rect = self.image.get_rect().move(10, settings.score_board_y)
 
     def update(self):
         """We only update the score in update() when it has changed."""
