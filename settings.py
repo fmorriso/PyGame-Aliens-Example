@@ -8,7 +8,7 @@ class Settings:
 
         # calculate game size as a percentage of device screen size
         device_width, device_height = pyautogui.size()
-        self.screenPct: float = float(3.0 / 4.0)
+        self.screenPct: float = float(0.85)
 
         # round scaled width and height to multiple of 100
         game_width: int = int((device_width * self.screenPct // 100) * 100)
