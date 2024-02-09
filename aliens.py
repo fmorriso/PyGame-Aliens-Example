@@ -30,17 +30,27 @@ from typing import List
 # import basic pygame modules
 import pygame as pg
 
+# import library that allows us to intelligently scale the size of the game to the device it
+# is running on.
+import pyautogui
+
+from settings import Settings
+
 # see if we can load more than standard BMP
 if not pg.image.get_extended():
     raise SystemExit("Sorry, extended image module required")
 
+print(f'pygame version = {pg.version.ver}')
+
+settings = Settings()
 
 # game constants
 MAX_SHOTS = 2  # most player bullets onscreen
 ALIEN_ODDS = 22  # chances a new alien appears
 BOMB_ODDS = 60  # chances a new bomb will drop
 ALIEN_RELOAD = 12  # frames between new aliens
-SCREENRECT = pg.Rect(0, 0, 640, 480)
+# SCREENRECT = pg.Rect(0, 0, 640, 480)
+SCREENRECT = pg.Rect(0, 0, settings.screen_width, settings.screen_height)
 SCORE = 0
 
 main_dir = os.path.split(os.path.abspath(__file__))[0]
