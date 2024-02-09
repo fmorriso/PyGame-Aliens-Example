@@ -21,3 +21,4 @@ class Settings:
         self.screen_height = game_height
         self.near_bottom = game_height * 0.90
         self.score_board_y = game_height * 0.95
+        self.score_font_size = int(device_height * 0.03)
