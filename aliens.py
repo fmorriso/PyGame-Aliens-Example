@@ -215,7 +215,9 @@ class Bomb(pg.sprite.Sprite):
         - remove the Bomb.
         """
         self.rect.move_ip(0, self.speed)
-        if self.rect.bottom >= 470:
+        # TODO: change this hard-coded value of 470
+        near_bottom = settings.screen_height * 0.95
+        if self.rect.bottom >= near_bottom:
             Explosion(self, self.explosion_group)
             self.kill()
 
