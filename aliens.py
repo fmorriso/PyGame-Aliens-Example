@@ -274,12 +274,14 @@ def main(winstyle=0):
     pg.mouse.set_visible(0)
 
     # create the background, tile the bgd image
+    # TODO: figure out how to put this somewhere other than the middle of the screen
     bgdtile = load_image("background.gif")
     background = pg.Surface(SCREENRECT.size)
-    for x in range(0, SCREENRECT.width, bgdtile.get_width()):
-        background.blit(bgdtile, (x, 0))
-    screen.blit(background, (0, 0))
-    pg.display.flip()
+    # print(f'SCREENRECT.size: {SCREENRECT.size}')
+    # for x in range(0, SCREENRECT.width, bgdtile.get_width()):
+    #     background.blit(bgdtile, (x, 0))
+    # screen.blit(background, (0, 0))
+    # pg.display.flip()
 
     # load the sound effects
     boom_sound = load_sound("boom.wav")

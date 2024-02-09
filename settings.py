@@ -13,6 +13,7 @@ class Settings:
         # round scaled width and height to multiple of 100
         game_width: int = int((device_width * self.screenPct // 100) * 100)
         game_height: int = int((device_height * self.screenPct // 100) * 100)
+        print(f'game width: {game_width}, height: {game_height}')
 
         self.scaleFactor = device_width / device_height + self.screenPct
         # print(f'scale factor = {self.scaleFactor}')
