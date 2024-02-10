@@ -53,7 +53,6 @@ MAX_SHOTS = 2  # most player bullets onscreen
 ALIEN_ODDS = 22  # chances a new alien appears
 BOMB_ODDS = 60  # chances a new bomb will drop
 ALIEN_RELOAD = 12  # frames between new aliens
-# SCORE moved to Score.py as a ClssVar
 
 main_dir = os.path.split(os.path.abspath(__file__))[0]
 print(f'main directory: {main_dir}')
