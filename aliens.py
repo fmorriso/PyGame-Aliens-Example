@@ -32,7 +32,8 @@ import pygame as pg
 
 # import library that allows us to intelligently scale the size of the game to the device it
 # is running on.
-from models import Alien, Bomb, Shot, Explosion, Score, Player
+from models import Alien, Bomb, Shot, Explosion, Score
+from player import Player
 from settings import Settings
 
 # see if we can load more than standard BMP
