@@ -30,14 +30,14 @@ import random
 # import basic pygame modules
 import pygame as pg
 
-# import library that allows us to intelligently scale the size of the game to the device it
-# is running on.
-from models import Score
+# import the individual classes needed for the game
+from score import Score
 from explosion import Explosion
 from shot import Shot
 from bomb import Bomb
 from alien import Alien
 from player import Player
+# keep common things needed by the classes in a separate Settings class
 from settings import Settings
 
 # see if we can load more than standard BMP
