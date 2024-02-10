@@ -15,8 +15,9 @@ class Settings:
         game_height: int = int((device_height * self.screenPct // 100) * 100)
         print(f'game width: {game_width}, height: {game_height}')
 
-        self.scaleFactor = device_width / device_height + self.screenPct
+        # self.scaleFactor = device_width / device_height * self.screenPct
         # print(f'scale factor = {self.scaleFactor}')
+        
         self.screen_width = game_width
         self.screen_height = game_height
         self.near_bottom = game_height * 0.90
