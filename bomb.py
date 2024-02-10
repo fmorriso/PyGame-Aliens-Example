@@ -2,7 +2,7 @@ from typing import List
 
 import pygame as pg
 
-from models import Explosion
+from explosion import Explosion
 from settings import Settings
 
 
