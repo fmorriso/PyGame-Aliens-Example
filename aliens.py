@@ -26,15 +26,18 @@ Controls
 
 import os
 import random
-from typing import List
 
 # import basic pygame modules
 import pygame as pg
 
-# import library that allows us to intelligently scale the size of the game to the device it
-# is running on.
-import pyautogui
-
+# import the individual classes needed for the game
+from score import Score
+from explosion import Explosion
+from shot import Shot
+from bomb import Bomb
+from alien import Alien
+from player import Player
+# keep common things needed by the classes in a separate Settings class
 from settings import Settings
 
 # see if we can load more than standard BMP
@@ -43,15 +46,13 @@ if not pg.image.get_extended():
 
 print(f'pygame version = {pg.version.ver}')
 
-settings = Settings()
+# settings = Settings()
 
 # game constants
 MAX_SHOTS = 2  # most player bullets onscreen
 ALIEN_ODDS = 22  # chances a new alien appears
 BOMB_ODDS = 60  # chances a new bomb will drop
 ALIEN_RELOAD = 12  # frames between new aliens
-SCREENRECT = pg.Rect(0, 0, settings.screen_width, settings.screen_height)
-SCORE = 0
 
 main_dir = os.path.split(os.path.abspath(__file__))[0]
 print(f'main directory: {main_dir}')
@@ -88,161 +89,6 @@ def load_sound(file):
 # since it is passed extra information about the keyboard.
 
 
-class Player(pg.sprite.Sprite):
-    """Representing the player as a moon buggy type car."""
-
-    speed = 10
-    bounce = 24
-    gun_offset = -11
-    images: List[pg.Surface] = []
-
-    def __init__(self, *groups):
-        pg.sprite.Sprite.__init__(self, *groups)
-        self.image = self.images[0]
-        self.rect = self.image.get_rect(midbottom=SCREENRECT.midbottom)
-        self.reloading = 0
-        self.origtop = self.rect.top
-        self.facing = -1
-
-    def move(self, direction):
-        if direction:
-            self.facing = direction
-        self.rect.move_ip(direction * self.speed, 0)
-        self.rect = self.rect.clamp(SCREENRECT)
-        if direction < 0:
-            self.image = self.images[0]
-        elif direction > 0:
-            self.image = self.images[1]
-        self.rect.top = self.origtop - (self.rect.left // self.bounce % 2)
-
-    def gunpos(self):
-        pos = self.facing * self.gun_offset + self.rect.centerx
-        return pos, self.rect.top
-
-
-class Alien(pg.sprite.Sprite):
-    """An alien space ship. That slowly moves down the screen."""
-
-    speed = 13
-    animcycle = 12
-    images: List[pg.Surface] = []
-
-    def __init__(self, *groups):
-        pg.sprite.Sprite.__init__(self, *groups)
-        self.image = self.images[0]
-        self.rect = self.image.get_rect()
-        self.facing = random.choice((-1, 1)) * Alien.speed
-        self.frame = 0
-        if self.facing < 0:
-            self.rect.right = SCREENRECT.right
-
-    def update(self):
-        self.rect.move_ip(self.facing, 0)
-        if not SCREENRECT.contains(self.rect):
-            self.facing = -self.facing
-            self.rect.top = self.rect.bottom + 1
-            self.rect = self.rect.clamp(SCREENRECT)
-        self.frame = self.frame + 1
-        self.image = self.images[self.frame // self.animcycle % 3]
-
-
-class Explosion(pg.sprite.Sprite):
-    """An explosion. Hopefully the Alien and not the player!"""
-
-    defaultlife = 12
-    animcycle = 3
-    images: List[pg.Surface] = []
-
-    def __init__(self, actor, *groups):
-        pg.sprite.Sprite.__init__(self, *groups)
-        self.image = self.images[0]
-        self.rect = self.image.get_rect(center=actor.rect.center)
-        self.life = self.defaultlife
-
-    def update(self):
-        """called every time around the game loop.
-
-        Show the explosion surface for 'defaultlife'.
-        Every game tick(update), we decrease the 'life'.
-
-        Also we animate the explosion.
-        """
-        self.life = self.life - 1
-        self.image = self.images[self.life // self.animcycle % 2]
-        if self.life <= 0:
-            self.kill()
-
-
-class Shot(pg.sprite.Sprite):
-    """a bullet the Player sprite fires."""
-
-    speed = -11
-    images: List[pg.Surface] = []
-
-    def __init__(self, pos, *groups):
-        pg.sprite.Sprite.__init__(self, *groups)
-        self.image = self.images[0]
-        self.rect = self.image.get_rect(midbottom=pos)
-
-    def update(self):
-        """called every time around the game loop.
-
-        Every tick we move the shot upwards.
-        """
-        self.rect.move_ip(0, self.speed)
-        if self.rect.top <= 0:
-            self.kill()
-
-
-class Bomb(pg.sprite.Sprite):
-    """A bomb the aliens drop."""
-    global settings
-
-    speed = 9
-    images: List[pg.Surface] = []
-
-    def __init__(self, alien, explosion_group, *groups):
-        pg.sprite.Sprite.__init__(self, *groups)
-        self.image = self.images[0]
-        self.rect = self.image.get_rect(midbottom=alien.rect.move(0, 5).midbottom)
-        self.explosion_group = explosion_group
-
-    def update(self):
-        """called every time around the game loop.
-
-        Every frame we move the sprite 'rect' down.
-        When it reaches the bottom we:
-
-        - make an explosion.
-        - remove the Bomb.
-        """
-        self.rect.move_ip(0, self.speed)
-        if self.rect.bottom >= settings.near_bottom:
-            Explosion(self, self.explosion_group)
-            self.kill()
-
-
-class Score(pg.sprite.Sprite):
-    """to keep track of the score."""
-
-    def __init__(self, *groups):
-        pg.sprite.Sprite.__init__(self, *groups)
-        self.font = pg.font.Font(None, settings.score_font_size)
-        self.font.set_italic(1)
-        self.color = "white"
-        self.lastscore = -1
-        self.update()
-        # self.rect = self.image.get_rect().move(10, 450)
-        self.rect = self.image.get_rect().move(10, settings.score_board_y)
-
-    def update(self):
-        """We only update the score in update() when it has changed."""
-        if SCORE != self.lastscore:
-            self.lastscore = SCORE
-            msg = f"Score: {SCORE}"
-            self.image = self.font.render(msg, 0, self.color)
-
-
 def main(winstyle=0):
     # Initialize pygame
     if pg.get_sdl_version()[0] == 2:
@@ -255,8 +101,9 @@ def main(winstyle=0):
     fullscreen = False
     # Set the display mode
     winstyle = 0  # |FULLSCREEN
-    bestdepth = pg.display.mode_ok(SCREENRECT.size, winstyle, 32)
-    screen = pg.display.set_mode(SCREENRECT.size, winstyle, bestdepth)
+    settings = Settings()
+    bestdepth = pg.display.mode_ok(settings.SCREENRECT.size, winstyle, 32)
+    screen = pg.display.set_mode(settings.SCREENRECT.size, winstyle, bestdepth)
 
     # Load images, assign to sprite classes
     # (do this before the classes are used, after screen setup)
@@ -277,7 +124,7 @@ def main(winstyle=0):
     # create the background, tile the bgd image
     # TODO: figure out how to put this somewhere other than the middle of the screen
     bgdtile = load_image("background.gif")
-    background = pg.Surface(SCREENRECT.size)
+    background = pg.Surface(settings.SCREENRECT.size)
     # print(f'SCREENRECT.size: {SCREENRECT.size}')
     # for x in range(0, SCREENRECT.width, bgdtile.get_width()):
     #     background.blit(bgdtile, (x, 0))
@@ -304,7 +151,6 @@ def main(winstyle=0):
     clock = pg.time.Clock()
 
     # initialize our starting sprites
-    global SCORE
     player = Player(all)
     Alien(
         aliens, all, lastalien
@@ -326,14 +172,14 @@ def main(winstyle=0):
                         print("Changing to FULLSCREEN")
                         screen_backup = screen.copy()
                         screen = pg.display.set_mode(
-                            SCREENRECT.size, winstyle | pg.FULLSCREEN, bestdepth
+                            settings.SCREENRECT.size, winstyle | pg.FULLSCREEN, bestdepth
                         )
                         screen.blit(screen_backup, (0, 0))
                     else:
                         print("Changing to windowed mode")
                         screen_backup = screen.copy()
                         screen = pg.display.set_mode(
-                            SCREENRECT.size, winstyle, bestdepth
+                            settings.SCREENRECT.size, winstyle, bestdepth
                         )
                         screen.blit(screen_backup, (0, 0))
                     pg.display.flip()
@@ -374,7 +220,7 @@ def main(winstyle=0):
                 boom_sound.play()
             Explosion(alien, all)
             Explosion(player, all)
-            SCORE = SCORE + 1
+            Settings.SCORE = Settings.SCORE + 1
             player.kill()
 
         # See if shots hit the aliens.
@@ -382,7 +228,7 @@ def main(winstyle=0):
             if pg.mixer and boom_sound is not None:
                 boom_sound.play()
             Explosion(alien, all)
-            SCORE = SCORE + 1
+            Settings.SCORE = Settings.SCORE + 1
 
         # See if alien bombs hit the player.
         for bomb in pg.sprite.spritecollide(player, bombs, 1):
