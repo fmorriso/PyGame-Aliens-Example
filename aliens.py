@@ -49,7 +49,7 @@ print(f'pygame version = {pg.version.ver}')
 # settings = Settings()
 
 # game constants
-MAX_SHOTS = 2  # most player bullets onscreen
+
 ALIEN_ODDS = 22  # chances a new alien appears
 BOMB_ODDS = 60  # chances a new bomb will drop
 ALIEN_RELOAD = 12  # frames between new aliens
@@ -197,7 +197,7 @@ def main(winstyle=0):
         direction = keystate[pg.K_RIGHT] - keystate[pg.K_LEFT]
         player.move(direction)
         firing = keystate[pg.K_SPACE]
-        if not player.reloading and firing and len(shots) < MAX_SHOTS:
+        if not player.reloading and firing and len(shots) < Settings.MAX_SHOTS:
             Shot(player.gunpos(), shots, all)
             if pg.mixer and shoot_sound is not None:
                 shoot_sound.play()

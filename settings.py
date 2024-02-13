@@ -6,6 +6,7 @@ import pygame as pg
 
 class Settings:
     SCORE: ClassVar[int] = 0
+    MAX_SHOTS: ClassVar[int] = 2  # most player bullets onscreen
 
     def __init__(self):
         """Initialize the game's settings."""
