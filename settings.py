@@ -8,7 +8,7 @@ class Settings:
     SCORE: ClassVar[int] = 0
     # game constants:
     MAX_SHOTS: ClassVar[int] = 2  # most player bullets onscreen
-    ALIEN_ODDS: ClassVar[int] = 22  # chances a new alien appears
+    ALIEN_ODDS: ClassVar[float] = 22.0  # chances a new alien appears
     BOMB_ODDS: ClassVar[float] = 60.0  # chances a new bomb will drop
     ALIEN_RELOAD: ClassVar[int]  = 12  # frames between new aliens
     ONE_TIME_COUNT: ClassVar[int] = 0 # for one-time print() calls 
