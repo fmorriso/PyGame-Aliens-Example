@@ -46,13 +46,7 @@ if not pg.image.get_extended():
 
 print(f'pygame version = {pg.version.ver}')
 
-# settings = Settings()
 
-# game constants
-
-ALIEN_ODDS = 22  # chances a new alien appears
-BOMB_ODDS = 60  # chances a new bomb will drop
-ALIEN_RELOAD = 12  # frames between new aliens
 
 main_dir = os.path.split(os.path.abspath(__file__))[0]
 print(f'main directory: {main_dir}')
@@ -147,7 +141,7 @@ def main(winstyle=0):
     lastalien = pg.sprite.GroupSingle()
 
     # Create Some Starting Values
-    alienreload = ALIEN_RELOAD
+    alienreload = Settings.ALIEN_RELOAD
     clock = pg.time.Clock()
 
     # initialize our starting sprites
@@ -206,12 +200,12 @@ def main(winstyle=0):
         # Create new alien
         if alienreload:
             alienreload = alienreload - 1
-        elif not int(random.random() * ALIEN_ODDS):
+        elif not int(random.random() * Settings.ALIEN_ODDS):
             Alien(aliens, all, lastalien)
-            alienreload = ALIEN_RELOAD
+            alienreload = Settings.ALIEN_RELOAD
 
         # Drop bombs
-        if lastalien and not int(random.random() * BOMB_ODDS):
+        if lastalien and not int(random.random() * Settings.BOMB_ODDS):
             Bomb(lastalien.sprite, all, bombs, all)
 
         # Detect collisions between aliens and players.

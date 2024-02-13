@@ -17,3 +17,4 @@ This is the Aliens example that comes with PyGame with a few enhancements
 * 2024-02-08 - added scaling based on device screen size.
 * 2024-02-09 - changed score display font size to adjust to game size
 * 2024-02-10 - Moved Alien, Bomb, Explosion, Player, Score and Shot classes into individual files
+* 2024-02-13 - Moved game constants (MAX_SHOTS, ALIEN_BOMBS, etc.) to Settings class
