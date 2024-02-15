@@ -46,8 +46,6 @@ if not pg.image.get_extended():
 
 print(f'pygame version = {pg.version.ver}')
 
-
-
 main_dir = os.path.split(os.path.abspath(__file__))[0]
 print(f'main directory: {main_dir}')
 
